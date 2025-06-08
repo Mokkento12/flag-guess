@@ -1,10 +1,4 @@
-import "./globals.css";
-// import type { Metadata } from "next";
-
-export const metadata = {
-  title: "Угадай флаг | Flag Guesser",
-  description: "Игра 'Угадай чей флаг?' — тренируй знание стран!",
-};
+import { Providers } from "./providers";
 
 export default function RootLayout({
   children,
@@ -13,7 +7,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

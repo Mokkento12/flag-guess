@@ -4,3 +4,7 @@ export interface Country {
   emoji?: string;
   flagUrl: string;
 }
+
+export interface CountriesData {
+  countries: Country[];
+}

@@ -1,36 +1,42 @@
 "use client";
 
 import { useState } from "react";
-import { mockCountries } from "@/data/mockCountries";
-import Image from "next/image";
+import { useQuery } from "@apollo/client";
+import { GET_COUNTRIES } from "@/graphql/queries";
+// import Image from "next/image";
 import styles from "./page.module.css";
 
 export default function Home() {
+  const { loading, error, data } = useQuery(GET_COUNTRIES);
   const [currentFlagIndex, setCurrentFlagIndex] = useState(0);
 
-  const currentCountry = mockCountries[currentFlagIndex];
+  if (loading) return <p>Загрузка...</p>;
+  if (error) {
+    console.error(error);
+    return <p>Ошибка загрузки данных</p>;
+  }
+
+  const countries = data.countries;
+  const currentCountry = countries[currentFlagIndex];
 
   const nextFlag = () => {
-    const newIndex = Math.floor(Math.random() * mockCountries.length);
+    const newIndex = Math.floor(Math.random() * countries.length);
     setCurrentFlagIndex(newIndex);
   };
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
         <h1 className={styles.title}>Угадай чей флаг?</h1>
-        {/* Блок с флагом */}
-        <div className={styles.flagPlaceholder}>
-          <Image
-            width={256}
-            height={170}
-            unoptimized
-            src={currentCountry.flagUrl}
-            alt="Флаг"
-          />
+
+        {/* Показываем эмодзи как флаг */}
+        <div className={styles.flagWrapper}>
+          <span style={{ fontSize: "3rem" }}>{currentCountry.emoji}</span>
         </div>
-        {/* Кнопка далее */}
+
+        {/* Кнопка следующего флага */}
         <button className={styles.nextButton} onClick={nextFlag}>
-          Далее
+          Следующий флаг ➡️
         </button>
       </main>
     </div>
