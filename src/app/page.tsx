@@ -9,6 +9,7 @@ import styles from "./page.module.css";
 export default function FlagGuesser() {
   const { loading, error, data } = useQuery(GET_COUNTRIES);
   const [currentFlagIndex, setCurrentFlagIndex] = useState(0);
+  const [showHint, setShowHint] = useState(false);
 
   if (loading) return <p>Загрузка...</p>;
   if (error) return <p>Ошибка загрузки</p>;
@@ -18,6 +19,11 @@ export default function FlagGuesser() {
   const nextFlag = () => {
     const newIndex = Math.floor(Math.random() * data.countries.length);
     setCurrentFlagIndex(newIndex);
+    setShowHint(false);
+  };
+
+  const toggleHint = () => {
+    setShowHint((prev) => !prev);
   };
 
   return (
@@ -34,11 +40,25 @@ export default function FlagGuesser() {
           unoptimized
         />
       </div>
+      {/* Подсказка */}
+      {showHint && (
+        <div className={styles.hint}>
+          <p>
+            Это флаг: <strong>{currentCountry.name}</strong>
+          </p>
+        </div>
+      )}
 
-      {/* Кнопка следующего флага */}
-      <button className={styles.nextButton} onClick={nextFlag}>
-        Следующий флаг ➡️
-      </button>
+      {/* Кнопки */}
+      <div className={styles.buttons}>
+        <button className={styles.hintButton} onClick={toggleHint}>
+          {showHint ? "Скрыть подсказку" : "Показать подсказку"}
+        </button>
+
+        <button className={styles.nextButton} onClick={nextFlag}>
+          Следующий флаг
+        </button>
+      </div>
     </main>
   );
 }
