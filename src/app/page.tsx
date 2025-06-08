@@ -3,8 +3,11 @@
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_COUNTRIES } from "@/graphql/queries";
-import Image from "next/image";
+
 import styles from "./page.module.css";
+import FlagCard from "./components/FlagCard/FlagCard";
+import Hint from "./components/Hint/Hint";
+import FlagButtons from "./components/FlagButtons/FlagButtons";
 
 export default function FlagGuesser() {
   const { loading, error, data } = useQuery(GET_COUNTRIES);
@@ -30,35 +33,14 @@ export default function FlagGuesser() {
     <main className={styles.gameContainer}>
       <h1>Угадай чей флаг?</h1>
 
-      {/* Флаг через flagcdn.com */}
-      <div className={styles.flagWrapper}>
-        <Image
-          src={`https://flagcdn.com/w160/${currentCountry.code.toLowerCase()}.png`}
-          alt={currentCountry.name}
-          width={256}
-          height={170}
-          unoptimized
-        />
-      </div>
-      {/* Подсказка */}
-      {showHint && (
-        <div className={styles.hint}>
-          <p>
-            Это флаг: <strong>{currentCountry.name}</strong>
-          </p>
-        </div>
-      )}
+      <FlagCard country={currentCountry} />
+      <Hint show={showHint} countryName={currentCountry.name} />
 
-      {/* Кнопки */}
-      <div className={styles.buttons}>
-        <button className={styles.hintButton} onClick={toggleHint}>
-          {showHint ? "Скрыть подсказку" : "Показать подсказку"}
-        </button>
-
-        <button className={styles.nextButton} onClick={nextFlag}>
-          Следующий флаг
-        </button>
-      </div>
+      <FlagButtons
+        onHintClick={toggleHint}
+        onNextClick={nextFlag}
+        showHint={showHint}
+      />
     </main>
   );
 }
